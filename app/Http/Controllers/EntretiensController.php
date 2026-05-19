@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Entretiens;
+use App\Models\Entretien;
 use Illuminate\Http\Request;
 
 class EntretiensController extends Controller
@@ -34,7 +34,7 @@ class EntretiensController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Entretiens $entretiens)
+    public function show(Entretien $Entretien)
     {
         //
     }
@@ -42,7 +42,7 @@ class EntretiensController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Entretiens $entretiens)
+    public function edit(Entretien $Entretien)
     {
         //
     }
@@ -50,7 +50,7 @@ class EntretiensController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Entretiens $entretiens)
+    public function update(Request $request, Entretien $Entretien)
     {
         //
     }
@@ -58,7 +58,7 @@ class EntretiensController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Entretiens $entretiens)
+    public function destroy(Entretien $Entretien)
     {
         //
     }
