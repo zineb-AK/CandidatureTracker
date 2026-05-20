@@ -13,8 +13,15 @@ class CandidatureController extends Controller
      */
     public function index()
     {
-        $candidatures = Candidature::all();
-        return view('candidature.index', compact('candidatures'));
+
+    $candidatures =
+        Candidature::where('user_id', auth()->id())
+        ->latest()
+        ->get();
+
+    return view('candidatures.index', compact('candidatures')
+    );
+
     }
 
   
@@ -29,7 +36,8 @@ class CandidatureController extends Controller
      */
     public function store(StoreCandidatureRequest $request)
     {
-        Candidature::create($request->validated());
+        Candidature::create($request->validated() + ['user_id' => auth()->id()]);
+
         return redirect()->route('candidatures.index')->with('success', 'Candidature created successfully.');
     }
 
