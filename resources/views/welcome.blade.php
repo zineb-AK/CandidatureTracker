@@ -67,7 +67,7 @@
             <!-- Texte principal -->
             <div class="space-y-6 text-center md:text-left">
                 <span class="inline-flex items-center gap-1.5 py-1.5 px-4 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100">
-                    🚀 Idéal pour les jeunes diplômés
+                    Idéal pour les jeunes diplômés
                 </span>
                 <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
                     Centralise tes candidatures. <br>

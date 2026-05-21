@@ -9,11 +9,21 @@ use Illuminate\Http\Request;
 
 class CandidatureController extends Controller
 {
-    
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
 
-public function dashboard() 
-{
-    $query = Candidature::where('user_id', auth()->id());
+    $candidatures =
+        Candidature::where('user_id', auth()->id())
+        ->latest()
+        ->get();
+
+    return view('candidatures.index', compact('candidatures')
+    );
+
+    }
 
     $Tot_candidatures           = (clone $query)->count();
     $Tot_candidatures_en_attente = (clone $query)->where('statut', 'a examiner')->count();
@@ -44,10 +54,12 @@ public function index()
     /**
      * Store a newly created resource in storage.
      */
-   public function store(StoreCandidatureRequest $request)
-{
-    // 1. On récupère les données validées du formulaire
-    $data = $request->validated();
+    public function store(StoreCandidatureRequest $request)
+    {
+        Candidature::create($request->validated() + ['user_id' => auth()->id()]);
+
+        return redirect()->route('candidatures.index')->with('success', 'Candidature created successfully.');
+    }
 
     // 2. On y injecte l'ID de l'utilisateur actuellement connecté
     $data['user_id'] = auth()->id();
