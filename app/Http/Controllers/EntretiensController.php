@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Entretien;
+use App\Models\Candidature;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreEntretienRequest;
 
 class EntretiensController extends Controller
 {
@@ -18,18 +20,25 @@ class EntretiensController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        return view ('entretiens.create');
-    }
+   public function create()
+{
+    $candidatures = Candidature::where('user_id', auth()->id())->get();
+
+    return view('entretiens.create', compact('candidatures'));
+}
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        //
-    }
+    public function store(StoreEntretienRequest $request)
+{
+    $data = $request->validated();
+    
+    auth()->user()->entretiens()->create($data);
+
+    // 3. Redirection vers l'index avec un message de succès
+    return redirect()->route('entretiens.index')->with('success', 'Entretien créé avec succès.');
+}
 
     /**
      * Display the specified resource.
