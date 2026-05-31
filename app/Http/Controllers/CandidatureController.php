@@ -5,74 +5,63 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCandidatureRequest;
 use App\Http\Requests\UpdateCandidatureRequest;
 use App\Models\Candidature;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class CandidatureController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
+    
+ public function dashboard()
+{
+    // 1. Nombre total de candidatures
+    $TotalCandidatures = Candidature::count();
 
-    $candidatures =
-        Candidature::where('user_id', auth()->id())
-        ->latest()
-        ->get();
+    // 2. Compte par statut en utilisant directement Eloquent
+    $Tot_candidatures_en_attente   = Candidature::where('statut', 'a examiner')->count();
+    $Tot_candidatures_acceptees   = Candidature::where('statut', 'Acceptee')->count();
+    $Tot_candidatures_rejetees    = Candidature::where('statut', 'Refusee')->count();
+    $Tot_candidatures_abondonnes = Candidature::where('statut', 'Abandonnee')->count();
 
-    return view('candidatures.index', compact('candidatures')
-    );
-
-    }
-
-    $Tot_candidatures           = (clone $query)->count();
-    $Tot_candidatures_en_attente = (clone $query)->where('statut', 'a examiner')->count();
-    $Tot_candidatures_rejetees   = (clone $query)->where('statut', 'refusee')->count();
-    $Tot_candidatures_abondonnes = (clone $query)->where('statut', 'abandonnee')->count();
-
-    // Renvoie uniquement vers le fichier dashboard.blade.php
+    // Envoi des compteurs à ta vue dashboard
     return view('dashboard', compact(
-        'Tot_candidatures', 
-        'Tot_candidatures_en_attente', 
-        'Tot_candidatures_rejetees', 
+        'TotalCandidatures',
+        'Tot_candidatures_en_attente',
+        'Tot_candidatures_acceptees',
+        'Tot_candidatures_rejetees',
         'Tot_candidatures_abondonnes'
     ));
 }
 
-public function index() 
-{
-    $candidatures = Candidature::where('user_id', auth()->id())->latest()->get();
-    return view('candidature.index', compact('candidatures'));
-}
-  
+    public function index()
+    {
+        $candidatures = Candidature::where('user_id', auth()->id())->latest()->get();
+        return view('candidature.index', compact('candidatures'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
         return view('candidature.create');
-        
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreCandidatureRequest $request)
-    {
-        Candidature::create($request->validated() + ['user_id' => auth()->id()]);
-
-        return redirect()->route('candidatures.index')->with('success', 'Candidature created successfully.');
+    { 
+        auth()->user()->candidatures()->create($request->validated());
+        return redirect()->route('candidature.index')->with('success', 'Candidature created successfully.');
     }
 
-    // 2. On y injecte l'ID de l'utilisateur actuellement connecté
-    $data['user_id'] = auth()->id();
-
-    // 3. On crée la candidature avec l'ensemble des données
-    Candidature::create($data);
-
-    return redirect()->route('dashboard')->with('success', 'Candidature created successfully.');
-}
-    
+    /**
+     * Display the specified resource.
+     */
     public function show(Candidature $candidature)
     {
-        //
+         
+        return view('candidature.show',compact('candidature'));
     }
 
     /**
@@ -80,7 +69,7 @@ public function index()
      */
     public function edit(Candidature $candidature)
     {
-        return view ('candidature.edit',);
+        return view('candidature.edit', compact('candidature'));
     }
 
     /**
@@ -88,16 +77,17 @@ public function index()
      */
     public function update(UpdateCandidatureRequest $request, Candidature $candidature)
     {
-        $data = $request->validated();
-        $candidature->update($data);
+        $candidature->update($request->validated());
         return redirect()->route('candidature.index')->with('success', 'Candidature updated successfully.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Re
+     * move the specified resource from storage.
      */
     public function destroy(Candidature $candidature)
     {
-        //
+        $candidature->delete();
+        return redirect()->route('candidature.index')->with('success', 'Candidature deleted successfully.');
     }
 }

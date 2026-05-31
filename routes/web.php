@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CandidatureController;
+use App\Http\Controllers\EntretiensController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -12,6 +13,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/dashboard', [CandidatureController::class, 'dashboard'])
         ->name('dashboard');
+        // Routes des candidatures
     Route::get('/candidature/index', [CandidatureController::class, 'index'])
         ->name('candidature.index');
     Route::get('/candidature/create', [CandidatureController::class, 'create'])
@@ -22,8 +24,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('candidature.show');
     Route::get('/candidature/{candidature}/edit', [CandidatureController::class, 'edit'])
         ->name('candidature.edit');
+    Route::put('/candidature/{candidature}', [CandidatureController::class, 'update'])
+        ->name('candidature.update');
     Route::delete('/candidature/{candidature}', [CandidatureController::class, 'destroy'])
         ->name('candidature.destroy');
+        //Route des entretiens 
+   Route::resource('entretiens', EntretiensController::class);
 
 });
 Route::middleware('auth')->group(function () {
